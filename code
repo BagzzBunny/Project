@@ -170,8 +170,16 @@ void containsALL(string haystack, string needle)
 	}
 }
 
-void choise(string str)
+void choise()
 {
+	cout << "Исходный текст:" << endl;
+	string str;
+	ifstream in("input.txt");
+	while (!in.eof()) {
+		string temp;
+		getline(in, temp);
+		str += temp;
+	}
 	cout << str;
 	cout << endl << "----------------------------------" << endl;
 	string need;
@@ -265,14 +273,6 @@ void choise(string str)
 int main()
 {
 	setlocale(LC_ALL, "Russian");
-	cout << "Исходный текст:" << endl;
-	string str;
-	ifstream in("input.txt");
-	while (!in.eof()) {
-		string temp;
-		getline(in, temp);
-		str += temp;
-	}
 	choise(str);
 	return 0;
 }
