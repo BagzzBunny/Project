@@ -172,6 +172,8 @@ void containsALL(string haystack, string needle)
 
 void choise(string str)
 {
+	cout << str;
+	cout << endl << "----------------------------------" << endl;
 	string need;
 	char main_choose;
 	char choose;
@@ -266,14 +268,11 @@ int main()
 	cout << "Исходный текст:" << endl;
 	string str;
 	ifstream in("input.txt");
-	int i = 0;
 	while (!in.eof()) {
 		string temp;
 		getline(in, temp);
 		str += temp;
 	}
-	cout << str;
-	cout << endl << "----------------------------------" << endl;
 	choise(str);
 	return 0;
 }
