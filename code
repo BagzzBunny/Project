@@ -12,7 +12,7 @@ int hkey(string key)
 	{
 		s = s + (0 + key[i]);
 	}
-	s = s % 52; //52 - 26 прописных и 26 заглавных англ букв + 10 цифр. Чем выше это число, тем меньше холостых вхождений
+	s = s % 62; //62 - 26 прописных и 26 заглавных англ букв + 10 цифр. Чем выше это число, тем меньше холостых вхождений
 	return s;
 }
 
@@ -170,28 +170,14 @@ void containsALL(string haystack, string needle)
 	}
 }
 
-int main()
+void choise(string str)
 {
-	setlocale(LC_ALL, "Russian");
-	cout << "Исходный текст:" << endl;
-	string str;
-	ifstream in("input.txt");
-
-	int i = 0;
-	while (!in.eof()) {
-		string temp;
-		getline(in, temp);
-		str += temp;
-	}
-	cout << str;
-	cout << endl << "----------------------------------" << endl;
-
 	string need;
 	char main_choose;
 	char choose;
 	do
 	{
-		cout <<"Выберите, что делать:"<< endl << "1. Ввести строку поиска" << endl << "0. Выйти" << endl;
+		cout << "Выберите, что делать:" << endl << "1. Ввести строку поиска" << endl << "0. Выйти" << endl;
 		cin >> main_choose;
 		cout << endl;
 		switch (main_choose)
@@ -269,8 +255,25 @@ int main()
 			cout << "У тебя была одна задача! Выбрать 1 или 2, но ты и её завалил." << endl;
 			break;
 		}
-	} 
-	while (main_choose != '0');
+	} while (main_choose != '0');
 	cout << endl;
+	return;
+}
+
+int main()
+{
+	setlocale(LC_ALL, "Russian");
+	cout << "Исходный текст:" << endl;
+	string str;
+	ifstream in("input.txt");
+	int i = 0;
+	while (!in.eof()) {
+		string temp;
+		getline(in, temp);
+		str += temp;
+	}
+	cout << str;
+	cout << endl << "----------------------------------" << endl;
+	choise(str);
 	return 0;
 }
