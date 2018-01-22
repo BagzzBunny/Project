@@ -5,78 +5,69 @@
 
 using namespace std;
 
-int hkey(string key) 
+int hkey(string key, int k) 
 {
 	int s = 0;
-	for (int i = 0; i < key.size(); i++)
+	for (int i = 0; i < k; i++)
 	{
-		s = s + (0 + key[i]);
+		s +=(0 + key[i]);
 	}
-	s = s % 62; //62 - 26 прописных и 26 заглавных англ букв + 10 цифр. Чем выше это число, тем меньше холостых вхождений
 	return s;
 }
 
 int contains_RP(string haystack, string needle) // Рабин Карп первое вхождение
-{
-	for (int i = 0; i < haystack.size() - needle.size(); i++)
+{	
+	int hash = hkey(haystack, needle.size());
+	int key = hkey(needle, needle.size()) % 62;
+	for (int i = 0; i < haystack.size() - needle.size() - 1; i++)
 	{
 		int s = 0;
-		string str;
-		for (int j = i; j < i + needle.size(); j++)
-			str = str + haystack[j];
-		if (hkey(str) == hkey(needle))
-		{// Рабин Карп первое вхождение
-			int k=0;
+		int hint = hash % 62;
+		if (hint == key)
+		{		
 			for (int j = 0; j < needle.size(); j++)
 			{
-				k++;
 				if (haystack[i + j] != needle[j])
-				{
-					i = i + k;
 					break;
-				}
 				s++;
 			}
 			if (s == needle.size())
 			{
-				return i + 1;;
+				return i + 1;
 			}
 		}
+		hash = hash - (0 + haystack[i]) + (0 + haystack[i + needle.size()]);
 	}
 	return -1;
 }
 
 void containsAll_RP(string haystack, string needle)// Рабин Карп все вхождения
 {
-	int g = 0;//счётчик найденных подстрок
-	for (int i = 0; i < haystack.size() - needle.size(); i++)
+	int hash = hkey(haystack, needle.size());
+	int key = hkey(needle, needle.size()) % 62;
+	int k = 0;
+	for (int i = 0; i < haystack.size() - needle.size() - 1; i++)
 	{
 		int s = 0;
-		string str;
-		for (int j = i; j < i + needle.size(); j++)
-			str = str + haystack[j];
-		if (hkey(str) == hkey(needle))
+		int hint = hash % 62;
+		if (hint == key)
 		{
-			int k = 0;
 			for (int j = 0; j < needle.size(); j++)
 			{
-				k++;
 				if (haystack[i + j] != needle[j])
-				{
-					i = i + k;
 					break;
-				}
 				s++;
 			}
 			if (s == needle.size())
 			{
 				cout << "Найденная строка:" << i + 1 << endl;
-				g = g + 1;
+				k++;
 			}
 		}
+		hash = hash - (0 + haystack[i]) + (0 + haystack[i + needle.size()]);
 	}
-	if (g == 0)
-		cout << "Не было ни одной такой стрoки" << endl;
+	if (k == 0)
+		cout << "Такая строка не была найдена" << endl;
 	return;
 }
 
@@ -273,6 +264,6 @@ void choise()
 int main()
 {
 	setlocale(LC_ALL, "Russian");
-	choise(str);
+	choise();
 	return 0;
 }
