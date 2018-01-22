@@ -2,6 +2,7 @@
 #include <string>
 #include <fstream>
 #include <Windows.h>
+#include <vector>
 
 using namespace std;
 
@@ -41,7 +42,7 @@ int contains_RP(string haystack, string needle) // Рабин Карп перв�
 	return -1;
 }
 
-void containsAll_RP(string haystack, string needle)// Рабин Карп все вхождения
+void containsAll_RP(string haystack, string needle, vector<int> &vec)// Рабин Карп все вхождения
 {
 	int hash = hkey(haystack, needle.size());
 	int key = hkey(needle, needle.size()) % 62;
@@ -60,14 +61,12 @@ void containsAll_RP(string haystack, string needle)// Рабин Карп все
 			}
 			if (s == needle.size())
 			{
-				cout << "Найденная строка:" << i + 1 << endl;
+				vec.push_back(i + 1);
 				k++;
 			}
 		}
 		hash = hash - (0 + haystack[i]) + (0 + haystack[i + needle.size()]);
 	}
-	if (k == 0)
-		cout << "Такая строка не была найдена" << endl;
 	return;
 }
 
@@ -96,7 +95,7 @@ int contains_KMP (string haystack, string needle)
 	return -1;
 }
 
-void containsALL_KMP(string haystack, string needle)
+void containsALL_KMP(string haystack, string needle, vector<int> &vec)
 {
 	int g = 0;
 	int s;
@@ -116,16 +115,13 @@ void containsALL_KMP(string haystack, string needle)
 		}
 		if (s == needle.size())
 		{
-			cout << "Найденная строка: " << i + 1 << endl;
-			g++;
+			vec.push_back(i + 1);
 		}
 	}
-	if (g == 0)
-		cout << "Такой подстроки нет" << endl;
 	return;
 }
 
-void contains(string haystack, string needle)
+int contains(string haystack, string needle)
 {
 	int s;
 	for (int i = 0; i < haystack.size() - needle.size(); i++)
@@ -138,30 +134,124 @@ void contains(string haystack, string needle)
 		}
 		if (s == needle.size())
 		{
-			cout << "Координаты найденной строки:" << i + 1 << endl;
+			return i + 1;
+		}
+	}
+	return -1;
+}
+
+
+void containsALL(string haystack, string needle, vector<int> &vec)
+{
+	int k = 0;
+	int s;
+	for (int i = 0; i < haystack.size() - needle.size(); i++)
+	{
+		s = 0;
+		for (int j = 0; j < needle.size(); j++)
+		{
+			if (haystack[i + j] == needle[j])
+				s++;
+		}
+		if (s == needle.size())
+		{
+			vec.push_back(i + 1);
+		}
+	}
+	return;
+}
+
+void printFirst(int s)
+{
+	if (s == -1)
+		cout << "Такой строки нет" << endl;
+	else
+		cout << "Координаты найденной подстроки" << s << endl;
+	return;
+}
+
+void printAll(vector<int> &vec)
+{
+	if (vec.empty())
+	{
+		cout << "Такой строки не обнаружилось." << endl;
+	}
+	else
+	{
+		cout << "Найденные подстроки:" << endl;
+		for (int i = 0; i < vec.size(); i++)
+			cout << vec[i] << endl;
+	}
+}
+
+void menu_choose(string str, string need)
+{
+	vector<int> vec;
+	char choose;
+	cout << "Выберите метод поиска:" << endl << "1)Простой метод" << endl << "2)Алгоритм Кнута-Морриса-Пратта" << endl << "3)Алгоритм Рабина-Карпа" << endl << "Ваш выбор:";
+	cin >> choose;
+	cout << endl;
+	switch (choose)
+	{
+	case '1':
+		cout << "Выберите подтип метода поиска:" << endl << "1)Вывести первое вхождение" << endl << "2)Вывести все вхождения" << endl;
+		char choose2;
+		cin >> choose2;
+		switch (choose2)
+		{
+		case '1':
+			printFirst(contains(str, need));
+			return;
+		case '2':
+			containsALL(str, need, vec);
+			printAll(vec);
+			break;
+		default:
+			cout << "У тебя была одна задача! Выбрать 1 или 2, но ты и её завалил." << endl;
 			break;
 		}
-
-	}
-}
-
-void containsALL(string haystack, string needle)
-{
-	int s;
-	for (int i = 0; i < haystack.size() - needle.size(); i++)
-	{
-		s = 0;
-		for (int j = 0; j < needle.size(); j++)
+		break;
+	case '2':
+		cout << "Выберите подтип метода поиска:" << endl << "1)Вывести первое вхождение" << endl << "2)Вывести все вхождения" << endl;
+		char chooseKMP;
+		cin >> chooseKMP;
+		switch (chooseKMP)
 		{
-			if (haystack[i + j] == needle[j])
-				s++;
+		case '1':
+			printFirst(contains_KMP(str, need));
+			break;
+		case '2':
+			containsALL_KMP(str, need, vec);
+			printAll(vec);
+			break;
+		default:
+			cout << "У тебя была одна задача! Выбрать 1 или 2, но ты и её завалил." << endl;
+			break;
 		}
-		if (s == needle.size())
-			cout << "Координаты найденной строки:" << i + 1 << endl;
+		break;
+	case '3':
+		cout << "Выберите подтип метода поиска:" << endl << "1)Вывести первое вхождение" << endl << "2)Вывести все вхождения" << endl;
+		char chooseRP;
+		cin >> chooseRP;
+		switch (chooseRP)
+		{
+		case '1':
+			printFirst(contains_RP(str, need));
+			return;
+		case '2':
+			containsAll_RP(str, need, vec);
+			printAll(vec);
+			break;
+		default:
+			cout << "У тебя была одна задача! Выбрать 1 или 2, но ты и её завалил." << endl;
+			break;
+		}
 	}
+	return;
 }
 
-void choise()
+
+void main_menu()
 {
 	cout << "Исходный текст:" << endl;
 	string str;
@@ -174,96 +264,31 @@ void choise()
 	cout << str;
 	cout << endl << "----------------------------------" << endl;
 	string need;
-	char main_choose;
 	char choose;
 	do
 	{
 		cout << "Выберите, что делать:" << endl << "1. Ввести строку поиска" << endl << "0. Выйти" << endl;
-		cin >> main_choose;
+		cin >> choose;
 		cout << endl;
-		switch (main_choose)
+		switch (choose)
 		{
-		case '1':
-
-			cout << "Введи строку поиска:";
+		case'1':
+			cout << "Введите строку поиска:";
 			cin >> need;
-			cout << "Выберите метод поиска:" << endl << "1)Простой метод" << endl << "2)Алгоритм Кнута-Морриса-Пратта" << endl << "3)Алгоритм Рабина-Карпа" << endl << "Ваш выбор:";
-			cin >> choose;
-			cout << endl;
-			switch (choose)
-			{
-			case '1':
-				cout << "Выберите подтип метода поиска:" << endl << "1)Вывести первое вхождение" << endl << "2)Вывести все вхождения" << endl;
-				char choose2;
-				cin >> choose2;
-				switch (choose2)
-				{
-				case '1':
-					if (contains_KMP(str, need) == -1)
-						cout << "Такой строки нет" << endl;
-					else
-						cout << "Координаты найденной подстроки" << contains_KMP(str, need) << endl;
-					break;
-				case '2':
-					containsALL(str, need);
-					break;
-				default:
-					cout << "У тебя была одна задача! Выбрать 1 или 2, но ты и её завалил." << endl;
-					break;
-				}
-				break;
-			case '2':
-				cout << "Выберите подтип метода поиска:" << endl << "1)Вывести первое вхождение" << endl << "2)Вывести все вхождения" << endl;
-				char chooseKMP;
-				cin >> chooseKMP;
-				switch (chooseKMP)
-				{
-				case '1':
-					contains_KMP(str, need);
-					break;
-				case '2':
-					containsALL_KMP(str, need);
-					break;
-				default:
-					cout << "У тебя была одна задача! Выбрать 1 или 2, но ты и её завалил." << endl;
-					break;
-				}
-				break;
-			case '3':
-				cout << "Выберите подтип метода поиска:" << endl << "1)Вывести первое вхождение" << endl << "2)Вывести все вхождения" << endl;
-				char chooseRP;
-				cin >> chooseRP;
-				switch (chooseRP)
-				{
-				case '1':
-					if (contains_RP(str, need) == -1)
-						cout << "Такой строки нет" << endl;
-					else
-						cout << "Координаты найденной подстроки" << contains_RP(str, need) << endl;
-					break;
-				case '2':
-					containsAll_RP(str, need);
-					break;
-				default:
-					cout << "У тебя была одна задача! Выбрать 1 или 2, но ты и её завалил." << endl;
-					break;
-				}
-			}
+			menu_choose(str, need);
 			break;
 		case '0':
-			break;
+			return;
 		default:
 			cout << "У тебя была одна задача! Выбрать 1 или 2, но ты и её завалил." << endl;
 			break;
 		}
-	} while (main_choose != '0');
-	cout << endl;
-	return;
+	} while (choose != 0);
 }
 
 int main()
 {
 	setlocale(LC_ALL, "Russian");
-	choise();
+	main_menu();
 	return 0;
 }
